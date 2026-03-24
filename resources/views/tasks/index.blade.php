@@ -10,7 +10,9 @@
     @endphp
     <header class="task-header">
         <h1 class="task-title" dusk="index-heading">タスク一覧</h1>
-        <a href="{{ route('tasks.create') }}" class="task-index-add-btn" dusk="index-create-link">新規タスク登録</a>
+        @if (feature_enabled('task_create_button', true))
+            <a href="{{ route('tasks.create') }}" class="task-index-add-btn" dusk="index-create-link">新規タスク登録</a>
+        @endif
     </header>
 
     <h2 class="task-list-heading" dusk="index-list-heading">登録済みタスク</h2>

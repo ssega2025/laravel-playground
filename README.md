@@ -1,3 +1,29 @@
+# githooks　~直接push防止のため~
+
+`master` / `staging` への直接 `push` を防ぐために、`pre-push` hook を設定します。
+
+## 目的
+
+以下のような事故を防ぐための仕組みです。
+
+- `master` へ直接 push してしまう
+- `staging` へ直接 push してしまう
+- PR を通さずに反映してしまう
+
+## 対象ブランチ
+
+- `master`
+- `staging`
+
+## セットアップ
+
+### 1. hook ファイルを配置
+`.githooks/pre-push` を作成します。
+
+### 2. 実行権限を付与
+```bash
+chmod +x .githooks/pre-push
+
 # 概要
 
 新ツール・アーキテクチャ等の検証用 Laravel です。

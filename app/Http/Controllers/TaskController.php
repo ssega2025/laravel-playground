@@ -44,6 +44,8 @@ class TaskController extends Controller
      */
     public function create(): View
     {
+        abort_unless(feature_enabled('task_create_button', true), 404);
+
         return view('tasks.create');
     }
 
@@ -55,6 +57,8 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request): RedirectResponse
     {
+        abort_unless(feature_enabled('task_create_button', true), 404);
+
         $validated = $request->validated();
 
         $this->task->createStatusNotStartedTask(
