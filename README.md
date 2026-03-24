@@ -23,6 +23,7 @@
 ### 2. 実行権限を付与
 ```bash
 chmod +x .githooks/pre-push
+```
 
 # 概要
 
