@@ -1,0 +1,61 @@
+#!/bin/sh
+
+# ----------------------------------------
+# Protected branches
+# ----------------------------------------
+PROTECTED_BRANCHES="master staging"
+
+# ----------------------------------------
+# Get current branch
+# ----------------------------------------
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+
+if [ -z "$CURRENT_BRANCH" ]; then
+  echo "❌ 現在のブランチ名を取得できませんでした。"
+  exit 1
+fi
+
+# detached HEAD 対策
+if [ "$CURRENT_BRANCH" = "HEAD" ]; then
+  echo "❌ detached HEAD 状態のため push を中止しました。"
+  exit 1
+fi
+
+# ----------------------------------------
+# Block direct push to protected branches
+# ----------------------------------------
+for BRANCH in $PROTECTED_BRANCHES
+do
+  if [ "$CURRENT_BRANCH" = "$BRANCH" ]; then
+    echo "----------------------------------------"
+    echo "❌ 直接 push は禁止されています"
+    echo "対象ブランチ: $CURRENT_BRANCH"
+    echo ""
+    echo "feature/fix などの作業ブランチを作成し、"
+    echo "Pull Request 経由で反映してください。"
+    echo "----------------------------------------"
+    exit 1
+  fi
+done
+
+# ----------------------------------------
+# Optional: warn if working tree has uncommitted changes
+# ※ push 自体はできるが、注意喚起だけする
+# ----------------------------------------
+if [ -n "$(git status --porcelain)" ]; then
+  echo "⚠️  未コミットの変更があります。"
+  echo "   必要に応じて git status を確認してください。"
+fi
+
+# ----------------------------------------
+# Show push information
+# ----------------------------------------
+REMOTE_NAME="$1"
+REMOTE_URL="$2"
+
+echo "✅ push チェックOK"
+echo "ブランチ: $CURRENT_BRANCH"
+echo "リモート: $REMOTE_NAME"
+echo "URL: $REMOTE_URL"
+
+exit 0
